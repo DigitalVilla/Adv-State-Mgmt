@@ -29,17 +29,32 @@ class Application extends Component {
     // Ideally, users are going to want to add, remove,
     // and check off items, right?
 
-    toggleItem = (el) => {
-
+    toggleItem = (itemId) => {
+        this.setState((state) => {
+            return {
+                items: state.items.map((item) => {
+                    if (item.id === itemId) {
+                        return {...item, packed : !item.packed }
+                    }
+                    return item
+                })
+            }
+        })
     }
 
-    removeItem = (el) => {
-        console.log("removed", el);
-        
+    removeItem = (itemId) => {
+        this.setState((state) => {
+            return {
+                items: state.items.filter((item) => item.id !== itemId)
+            }
+        })
     }
+
 
     addItem = (newItem) => {
-        this.setState((ps) => ({ items: [...ps.items, newItem]}))
+        this.setState((state) => {
+            return { items: [...state.items, newItem] }
+        })
     }
 
 
@@ -65,10 +80,10 @@ class Application extends Component {
 
         return (
             <div className="Application">
-                <NewItem onSubmit ={this.addItem} />
+                <NewItem onSubmit={this.addItem} />
                 <CountDown />
-                <Items title="Unpacked Items" items={unPackedItems} onCheckOff={this.toggleItem} onRemove={this.removeItem}/>
-                <Items title="Packed Items" items={packedItems} onCheckOff={this.toggleItem} onRemove={this.removeItem}/>
+                <Items title="Unpacked Items" items={unPackedItems} onCheckOff={this.toggleItem} onRemove={this.removeItem} />
+                <Items title="Packed Items" items={packedItems} onCheckOff={this.toggleItem} onRemove={this.removeItem} />
                 <button className="button full-width">Mark All As Unpacked</button>
             </div>
         );
