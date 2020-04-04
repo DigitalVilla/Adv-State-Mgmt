@@ -34,7 +34,7 @@ class Application extends Component {
             return {
                 items: state.items.map((item) => {
                     if (item.id === itemId) {
-                        return {...item, packed : !item.packed }
+                        return { ...item, packed: !item.packed }
                     }
                     return item
                 })
@@ -54,6 +54,21 @@ class Application extends Component {
     addItem = (newItem) => {
         this.setState((state) => {
             return { items: [...state.items, newItem] }
+        })
+    }
+
+    updateItem = (value, itemId) => {
+        console.log('UPDATED');
+        
+        this.setState((state) => {
+            return {
+                items: state.items.map((item) => {
+                    if (item.id === itemId) {
+                        return { ...item, value }
+                    }
+                    return item
+                })
+            }
         })
     }
 
@@ -82,8 +97,8 @@ class Application extends Component {
             <div className="Application">
                 <NewItem onSubmit={this.addItem} />
                 <CountDown />
-                <Items title="Unpacked Items" items={unPackedItems} onCheckOff={this.toggleItem} onRemove={this.removeItem} />
-                <Items title="Packed Items" items={packedItems} onCheckOff={this.toggleItem} onRemove={this.removeItem} />
+                <Items title="Unpacked Items" items={unPackedItems} onUpdate={this.updateItem} onToggle={this.toggleItem} onRemove={this.removeItem} />
+                <Items title="Packed Items" items={packedItems} onUpdate={this.updateItem} onToggle={this.toggleItem} onRemove={this.removeItem} />
                 <button className="button full-width">Mark All As Unpacked</button>
             </div>
         );

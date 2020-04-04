@@ -16,7 +16,7 @@ class Items extends Component {
       // console.log(this.props);
 
 
-      const { title, items } = this.props;
+      const { title, items, onToggle, onRemove, onUpdate } = this.props;
       return (
          <section className="Items">
             <h2>
@@ -30,8 +30,9 @@ class Items extends Component {
                .map(item => (
                   <Item
                      key={item.id}
-                     onCheckOff={this.props.onCheckOff}
-                     onRemove={this.props.onRemove}
+                     onToggle={onToggle}
+                     onRemove={onRemove}
+                     onUpdate={onUpdate}
                      item={item}
                   />
                ))}

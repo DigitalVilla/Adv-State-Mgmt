@@ -8,18 +8,22 @@ class NewItem extends Component {
 
 	handleChange = (e) => {
 		this.setState({
-			value: e.target.value
+			value: e.target.value.trim()
 		})
 	}
 
 	handleSubmit = event => {
 		event.preventDefault()
+		const {value} = this.state;
 
-		this.props.onSubmit({
-			value: this.state.value,
-			id: uniqueId(),
-			packed: false
-		})
+		if (value) {
+			this.props.onSubmit({
+				id: uniqueId(),
+				packed: false,
+				value
+			})
+			this.setState({ value: '' })
+		}
 	}
 
 	render() {
