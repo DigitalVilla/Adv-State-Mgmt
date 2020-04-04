@@ -5,7 +5,7 @@ import Filter from './Filter';
 class Items extends Component {
    state = {
       // What state does this component have?
-      filter : ''
+      filter: ''
    };
 
    updateSearchTerm = searchTerm => {
@@ -13,7 +13,7 @@ class Items extends Component {
    };
 
    render() {
-console.log(this.props);
+      // console.log(this.props);
 
 
       const { title, items } = this.props;
@@ -30,8 +30,8 @@ console.log(this.props);
                .map(item => (
                   <Item
                      key={item.id}
-                     onCheckOff={() => { }}
-                     onRemove={() => { }}
+                     onCheckOff={this.props.onCheckOff}
+                     onRemove={this.props.onRemove}
                      item={item}
                   />
                ))}

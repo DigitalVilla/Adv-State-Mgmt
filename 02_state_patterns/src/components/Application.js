@@ -29,8 +29,22 @@ class Application extends Component {
     // Ideally, users are going to want to add, remove,
     // and check off items, right?
 
+    toggleItem = (el) => {
+
+    }
+
+    removeItem = (el) => {
+        console.log("removed", el);
+        
+    }
+
+    addItem = (newItem) => {
+        this.setState((ps) => ({ items: [...ps.items, newItem]}))
+    }
+
+
     splitItems = () => {
-        const { items } = this.state; 
+        const { items } = this.state;
         const unPacked = [];
         const packed = [];
 
@@ -47,14 +61,14 @@ class Application extends Component {
 
 
     render() {
-        const [unPacked, packed] = this.splitItems();
+        const [unPackedItems, packedItems] = this.splitItems();
 
         return (
             <div className="Application">
-                <NewItem />
+                <NewItem onSubmit ={this.addItem} />
                 <CountDown />
-                <Items title="Unpacked Items" items={unPacked} />
-                <Items title="Packed Items" items={packed} />
+                <Items title="Unpacked Items" items={unPackedItems} onCheckOff={this.toggleItem} onRemove={this.removeItem}/>
+                <Items title="Packed Items" items={packedItems} onCheckOff={this.toggleItem} onRemove={this.removeItem}/>
                 <button className="button full-width">Mark All As Unpacked</button>
             </div>
         );
