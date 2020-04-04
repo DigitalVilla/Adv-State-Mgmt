@@ -1,0 +1,42 @@
+.Item{
+  display: flex;
+  justify-content: space-between;
+  border: 2px solid rgb(243, 243, 243);
+  margin-bottom: 5px;
+  padding: 0 10px;
+  border-radius: 4px;
+  align-items: center;
+}
+
+.Item-remove {
+  background-color: white;
+  color: #f65e81;
+  border: none;
+  outline: none;
+  padding: 0;
+}
+
+.Item-name {
+  background-color: transparent;
+  flex: 1;
+  flex-basis: content;
+} 
+
+
+.Item-name input { 
+  width: 95%;
+  border: none;
+  background: transparent;
+  height: 100%;
+  outline: none !important;
+}
+
+.Item-name input:focus { 
+  color: rgb(0, 97, 136);
+  font-weight: 500;
+}
+
+.Item-remove:hover {
+  background-color: white;
+  text-decoration: underline;
+}
