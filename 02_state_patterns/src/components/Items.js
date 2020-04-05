@@ -8,15 +8,17 @@ class Items extends Component {
       filter: ''
    };
 
+   shouldComponentUpdate (prevProps, prevState) {
+      return prevProps.items.length !== this.props.items.length
+   }
+
    updateSearchTerm = searchTerm => {
 
    };
 
    render() {
-      // console.log(this.props);
-
-
       const { title, items, onToggle, onRemove, onUpdate } = this.props;
+      console.log("********* ITEMS LIST: ", title);
       return (
          <section className="Items">
             <h2>

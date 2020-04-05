@@ -11,6 +11,10 @@ class Item extends Component {
       }
    }
 
+   shouldComponentUpdate (prevProps, prevState) {
+      return prevProps.item.value !== this.props.item.value || prevState.value !== this.state.value
+   }
+
    handleOnChange = (evt) => {
       this.setState({ value: evt.target.value })
       this.updated = true
@@ -30,13 +34,14 @@ class Item extends Component {
          }
          this.updated = false
       }
+      
    }
-
    render() {
-      const { item, onRemove, onToggle } = this.props;
+      const { item, onToggle } = this.props;
+      console.log("SINGLE ITEM", item.value);
       return (
          <article className="Item">
-            <label aria-label={item.value}>
+            <label aria-label={item.value} className="Item-ckeck">
                <input
                   type="checkbox"
                   checked={item.packed}

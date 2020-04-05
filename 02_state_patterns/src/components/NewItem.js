@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import uniqueId from 'lodash/uniqueId'
-
 import './NewItem.css'
 
 class NewItem extends Component {
@@ -16,12 +14,8 @@ class NewItem extends Component {
 		event.preventDefault()
 		const {value} = this.state;
 
-		if (value) {
-			this.props.onSubmit({
-				id: uniqueId(),
-				packed: false,
-				value
-			})
+		if (value.length) {
+			this.props.onSubmit(value)
 			this.setState({ value: '' })
 		}
 	}
