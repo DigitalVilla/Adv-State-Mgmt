@@ -9,7 +9,7 @@ class Filter extends Component {
   };
 
   render() {
-    const { searchTerm, title } = this.props
+    const { onClear, searchTerm, title } = this.props
     return (
       <div className="Items-searchTerm">
         <label htmlFor={`filter${title}`}>Filter {title}</label>
@@ -19,6 +19,7 @@ class Filter extends Component {
           onChange={this.handleChange}
           placeholder={"Filter " + title}
         />
+        <button onClick={onClear} type="button">Clear</button>
       </div>
     );
   }
