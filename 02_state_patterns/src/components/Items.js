@@ -16,6 +16,10 @@ class Items extends Component {
       this.setState({ searchTerm })
    };
 
+   clearSearch = () => {
+      this.setState({ searchTerm: '' })
+   }
+
    render() {
       const { title, items, onToggle, onRemove, onUpdate } = this.props
       const { searchTerm } = this.state
@@ -28,6 +32,7 @@ class Items extends Component {
             <Filter
                title={title}
                searchTerm={searchTerm}
+               onClear={this.clearSearch}
                onChange={this.updateSearchTerm}
             />
             <ul>
