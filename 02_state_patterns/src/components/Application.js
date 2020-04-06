@@ -1,97 +1,92 @@
 import React, { Component } from 'react';
-import uniqueId from 'lodash/uniqueId';
 import CountDown from './CountDown';
 import NewItem from './NewItem';
 import Items from './Items';
-
 import './Application.css';
 
-const defaultState = [
-    { value: 'Pants', id: uniqueId(), packed: false },
-    { value: 'Jacket', id: uniqueId(), packed: false },
-    { value: 'iPhone Charger', id: uniqueId(), packed: false },
-    { value: 'MacBook', id: uniqueId(), packed: false },
-    { value: 'Sleeping Pills', id: uniqueId(), packed: true },
-    { value: 'Underwear', id: uniqueId(), packed: false },
-    { value: 'Hat', id: uniqueId(), packed: false },
-    { value: 'T-Shirts', id: uniqueId(), packed: false },
-    { value: 'Belt', id: uniqueId(), packed: false },
-    { value: 'Passport', id: uniqueId(), packed: true },
-    { value: 'Sandwich', id: uniqueId(), packed: true },
-];
-
+const items = {
+    key000: { value: 'Pants', packed: false },
+    key001: { value: 'Jacket', packed: false },
+    key002: { value: 'iPhone Charger', packed: false },
+    key003: { value: 'MacBook', packed: false },
+    key004: { value: 'Sleeping Pills', packed: true },
+    key005: { value: 'Underwear', packed: false },
+    key006: { value: 'Hat', packed: false },
+    key007: { value: 'T-Shirts', packed: false },
+    key008: { value: 'Belt', packed: false },
+    key008: { value: 'Passport', packed: true },
+    key009: { value: 'Sandwich', packed: true },
+};
 class Application extends Component {
-    state = {
-        items: defaultState
-    }
-
-    // How are we going to manipulate the state?
-    // Ideally, users are going to want to add, remove,
-    // and check off items, right?
+    state = { items }
+    itemKey = 9
 
     toggleItem = (itemId) => {
         this.setState((state) => {
-            return {
-                items: state.items.map((item) => {
-                    if (item.id === itemId) {
-                        return { ...item, packed: !item.packed }
-                    }
-                    return item
-                })
+            state.items[itemId].packed = !state.items[itemId].packed
+            return { state }
+        })
+    }
+
+    unpackAll = () => {
+        this.setState((state) => {
+            for (const key in state.items) {
+                if (state.items.hasOwnProperty(key)) {
+                    state.items[key].packed = false
+                }
             }
+
+            return { state }
         })
     }
 
     removeItem = (itemId) => {
         this.setState((state) => {
-            return {
-                items: state.items.filter((item) => item.id !== itemId)
-            }
+            delete state.items[itemId];
+            return { state }
         })
     }
 
-
-    addItem = (newItem) => {
+    addItem = (value) => {
+        let id = this.itemKey++ < 100 ? '0' + this.itemKey : this.itemKey;
         this.setState((state) => {
-            return { items: [...state.items, newItem] }
+            state.items[`key${id}`] = { value, packed: false }
+            return { state }
         })
     }
 
     updateItem = (value, itemId) => {
-        console.log('UPDATED');
-        
         this.setState((state) => {
-            return {
-                items: state.items.map((item) => {
-                    if (item.id === itemId) {
-                        return { ...item, value }
-                    }
-                    return item
-                })
-            }
+            state.items[itemId].value = value
+            return { state }
         })
     }
 
-
-    splitItems = () => {
+    mapItems = () => {
         const { items } = this.state;
         const unPacked = [];
         const packed = [];
 
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].packed) {
-                packed.push(items[i])
-            } else {
-                unPacked.push(items[i])
+        for (const key in items) {
+            if (items.hasOwnProperty(key)) {
+                const obj = {
+                    id: key,
+                    value: items[key].value,
+                    packed: items[key].packed,
+                }
+                if (obj.packed) {
+                    packed.push(obj)
+                } else {
+                    unPacked.push(obj)
+                }
             }
         }
 
         return [unPacked, packed]
     }
 
-
     render() {
-        const [unPackedItems, packedItems] = this.splitItems();
+        const [unPackedItems, packedItems] = this.mapItems();
 
         return (
             <div className="Application">
@@ -99,7 +94,7 @@ class Application extends Component {
                 <CountDown />
                 <Items title="Unpacked Items" items={unPackedItems} onUpdate={this.updateItem} onToggle={this.toggleItem} onRemove={this.removeItem} />
                 <Items title="Packed Items" items={packedItems} onUpdate={this.updateItem} onToggle={this.toggleItem} onRemove={this.removeItem} />
-                <button className="button full-width">Mark All As Unpacked</button>
+                <button className="button full-width" onClick={this.unpackAll}>Mark All As Unpacked</button>
             </div>
         );
     }
