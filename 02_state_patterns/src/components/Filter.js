@@ -1,22 +1,25 @@
-import React, { Component } from 'react';
-
-import './Filter.css';
+import React, { Component } from 'react'
+import './Filter.css'
 
 class Filter extends Component {
+
   handleChange = event => {
-    const { onChange } = this.props;
-    const value = event.target.value;
-    onChange(value);
+    const value = event.target.value
+    this.props.onChange(value)
   };
 
   render() {
-    const { searchTerm } = this.props;
+    const { searchTerm, title } = this.props
     return (
-      <input
-        className="Items-searchTerm"
-        value={searchTerm}
-        onChange={this.handleChange}
-      />
+      <div className="Items-searchTerm">
+        <label htmlFor={`filter${title}`}>Filter {title}</label>
+        <input
+          id={`filter${title}`}
+          value={searchTerm}
+          onChange={this.handleChange}
+          placeholder={"Filter " + title}
+        />
+      </div>
     );
   }
 }

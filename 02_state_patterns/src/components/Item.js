@@ -40,7 +40,7 @@ class Item extends Component {
       const { item, onToggle } = this.props;
       console.log("SINGLE ITEM", item.value);
       return (
-         <article className="Item">
+         <li className="Item">
             <label aria-label={item.value} className="Item-ckeck">
                <input
                   type="checkbox"
@@ -62,7 +62,7 @@ class Item extends Component {
             <button className="Item-remove" onClick={this.handleRemove}>
                Remove
             </button>
-         </article>
+         </li>
       );
    }
 }
