@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
-const WithCount = WrappedComponent => class CounterContainer extends Component {
-   static displayName = `WithCount:${WrappedComponent.name || WrappedComponent.displayName}`
+export default class WithCountProps extends Component {
     state = {
         counter: 0
     }
@@ -27,8 +26,13 @@ const WithCount = WrappedComponent => class CounterContainer extends Component {
     }
 
     render() {
-        return ( <WrappedComponent onClick={this.handleCalculation} counter={this.state.counter} />);
+        return (
+            <div className="WithCountProps">
+                {this.props.render(
+                    this.state.counter,
+                    this.handleCalculation
+                )}
+            </div>
+        );
     }
 }
-
-export default WithCount
