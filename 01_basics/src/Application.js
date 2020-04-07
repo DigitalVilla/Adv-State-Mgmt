@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 
-import CounterContainer from './CounterContainer';
+import Counter from './Counter';
+import WithCount from './WithCount';
 // import CounterContainer from './CounterContainer';
-// import WithCount from './WithCount';
+
+const CounterHOC = WithCount(Counter)
 
 export default class Application extends Component {
   render() {
     return (
       <main className="Application">
-        <CounterContainer />
+        <CounterHOC />
       </main>
     );
   }
