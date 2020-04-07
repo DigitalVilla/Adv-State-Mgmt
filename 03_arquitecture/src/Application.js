@@ -9,7 +9,9 @@ const initialState = {
    peopleCount: 10,
    sliceCount: 2,
 };
-export default class Application extends Component {
+
+const WithPizzaCalculations = WrappedComponent => class extends Component {
+   static displayName = `WithPizzaCalculations:${WrappedComponent.name || WrappedComponent.displayName}`;
    state = { ...initialState };
 
    updatePeopleCount = event => {
@@ -34,7 +36,7 @@ export default class Application extends Component {
       );
 
       return (
-         <PizzaForm
+         <WrappedComponent
             pizzaCount={pizzaCount}
             peopleCount={peopleCount}
             sliceCount={sliceCount}
@@ -46,6 +48,7 @@ export default class Application extends Component {
    }
 }
 
+// Presentation component 
 function PizzaForm(props) {
    return (
       <div className="Application">
@@ -65,9 +68,16 @@ function PizzaForm(props) {
             onChange={props.updateSliceCount}
          />
          <Result amount={props.pizzaCount} />
-         <button className="full-width" onClick={props.onReset}>
-            Reset
-    </button>
+         <button className="full-width" onClick={props.onReset}>Reset</button>
       </div>
    )
+}
+
+// New HOC 
+const PizzaContainer = WithPizzaCalculations(PizzaForm);
+
+export default class Application extends Component {
+   render() {
+      return <PizzaContainer />
+   }
 }
