@@ -4,28 +4,38 @@ import Title from './Title';
 import Input from './Input';
 import Result from './Result';
 import calculatePizzas from './lib/calculatePizzas';
+//FLUX
+import PizzaStore from './flux/PizzaStore'
+import * as actions from './flux/actions'
 
-const initialState = {
-   peopleCount: 10,
-   sliceCount: 2,
-};
 
-const WithPizzaCalculations = WrappedComponent => class extends Component {
-   static displayName = `WithPizzaCalculations:${WrappedComponent.name || WrappedComponent.displayName}`;
-   state = { ...initialState };
+class PizzaCalculator extends Component {
+   state = PizzaStore.getState() 
+
+   componentDidMount () {
+      PizzaStore.on('change', this.updateState)
+   }
+
+   componentWillUnmount() {
+      PizzaStore.off('change', this.updateState)
+   }
+
+   updateState = () => {
+      this.setState(PizzaStore.getState())
+   }
 
    updatePeopleCount = event => {
       const peopleCount = parseInt(event.target.value, 10);
-      this.setState({ peopleCount });
+      actions.updatePeopleCount(peopleCount)
    };
 
    updateSliceCount = event => {
       const sliceCount = parseInt(event.target.value, 10);
-      this.setState({ sliceCount });
+      actions.updateSliceCount(sliceCount)
    };
 
-   onReset = event => {
-      this.setState({ ...initialState });
+   resetCount = event => {
+      actions.resetCount()
    };
 
    render() {
@@ -36,20 +46,18 @@ const WithPizzaCalculations = WrappedComponent => class extends Component {
       );
 
       return (
-         <WrappedComponent
+         <PizzaForm
+            {...this.state}
             pizzaCount={pizzaCount}
-            peopleCount={peopleCount}
-            sliceCount={sliceCount}
             updatePeopleCount={this.updatePeopleCount}
             updateSliceCount={this.updateSliceCount}
-            onReset={this.onReset}
+            resetCount={this.resetCount}
          />
       );
    }
 }
 
-// Presentation component 
-function PizzaForm(props) {
+const PizzaForm = (props) => {
    return (
       <div className="Application">
          <Title />
@@ -68,16 +76,13 @@ function PizzaForm(props) {
             onChange={props.updateSliceCount}
          />
          <Result amount={props.pizzaCount} />
-         <button className="full-width" onClick={props.onReset}>Reset</button>
+         <button className="full-width" onClick={props.resetCount}>Reset</button>
       </div>
    )
 }
 
-// New HOC 
-const PizzaContainer = WithPizzaCalculations(PizzaForm);
-
 export default class Application extends Component {
    render() {
-      return <PizzaContainer />
+      return <PizzaCalculator />
    }
 }
