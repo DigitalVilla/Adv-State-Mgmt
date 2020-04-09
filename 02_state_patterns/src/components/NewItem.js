@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { addItem } from '../flux/actions'
 import './NewItem.css'
 
 class NewItem extends Component {
@@ -15,7 +16,7 @@ class NewItem extends Component {
 		const {value} = this.state;
 
 		if (value.length) {
-			this.props.onSubmit(value)
+			addItem(value)
 			this.setState({ value: '' })
 		}
 	}
@@ -26,7 +27,7 @@ class NewItem extends Component {
 
 	render() {
 		const { value } = this.state
-		console.log("** NewItem");
+		// console.log("** NewItem");
 
 		return (
 			<form className="NewItem" onSubmit={this.handleSubmit}>
