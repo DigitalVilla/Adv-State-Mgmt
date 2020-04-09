@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as actions from '../flux/actions'
 import './Item.css';
 
 class Item extends Component {
@@ -11,8 +12,9 @@ class Item extends Component {
       }
    }
 
-   shouldComponentUpdate (prevProps, prevState) {
-      return prevProps.item.value !== this.props.item.value || prevState.value !== this.state.value
+   shouldComponentUpdate(prevProps, prevState) {
+      return prevState.value !== this.state.value ||
+         prevProps.item.value !== this.props.item.value
    }
 
    handleOnChange = (evt) => {
@@ -20,43 +22,45 @@ class Item extends Component {
       this.updated = true
    }
 
-   handleRemove = () => this.props.onRemove(this.props.item.id)
-
    handleOnBlur = (evt) => {
-      const { item, onUpdate, onRemove } = this.props;
+      const { item } = this.props;
       const value = evt.target.value.trim();
 
       if (this.updated) {
          if (!value.length) {
-            onRemove(item.id)
+            actions.removeItem(item)
          } else if (value !== item.value) {
-            onUpdate(value, item.id)
+            actions.updateItem(item, value)
          }
          this.updated = false
       }
-      
    }
+
+   handleCheck = () => actions.toggleItem(this.props.item)
+   handleRemove = () => actions.removeItem(this.props.item)
+
    render() {
-      const { item, onToggle } = this.props;
-      console.log("SINGLE ITEM", item.value);
+      const { item } = this.props;
+      // console.log("SINGLE ITEM", item.value);
+      
       return (
          <li className="Item">
             <label aria-label={item.value} className="Item-ckeck">
                <input
                   type="checkbox"
                   checked={item.packed}
-                  onChange={() => onToggle(item.id)}
+                  onChange={this.handleCheck}
                   id={item.id}
                />
             </label>
             <label className="Item-name" aria-label={item.value + 'check'}>
                <input
                   type="text"
+                  id={item.id}
                   autoComplete="off"
                   value={this.state.value}
                   onChange={this.handleOnChange}
                   onBlur={this.handleOnBlur}
-                  id={item.id}
                />
             </label>
             <button className="Item-remove" onClick={this.handleRemove}>

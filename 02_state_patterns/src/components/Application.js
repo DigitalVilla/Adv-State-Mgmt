@@ -3,63 +3,32 @@ import CountDown from './CountDown';
 import NewItem from './NewItem';
 import Items from './Items';
 import './Application.css';
+import ItemsStore from '../flux/ItemStore'
+import { unpackAll } from '../flux/actions'
 
-const items = {
-    key000: { value: 'Pants', packed: false },
-    key001: { value: 'Jacket', packed: false },
-    key002: { value: 'iPhone Charger', packed: false },
-    key003: { value: 'MacBook', packed: false },
-    key004: { value: 'Sleeping Pills', packed: true },
-    key005: { value: 'Underwear', packed: false },
-    key006: { value: 'Hat', packed: false },
-    key007: { value: 'T-Shirts', packed: false },
-    key008: { value: 'Belt', packed: false },
-    key008: { value: 'Passport', packed: true },
-    key009: { value: 'Sandwich', packed: true },
-};
 class Application extends Component {
-    state = { items }
-    itemKey = 9
+    state = {items:ItemsStore.getStore()}
 
-    toggleItem = (itemId) => {
-        this.setState((state) => {
-            state.items[itemId].packed = !state.items[itemId].packed
-            return { state }
-        })
+    componentDidMount() {
+        ItemsStore.on('change', this.updateState)
+        ItemsStore.on('delete', this.resetState)
     }
 
-    unpackAll = () => {
-        this.setState((state) => {
-            for (const key in state.items) {
-                if (state.items.hasOwnProperty(key)) {
-                    state.items[key].packed = false
-                }
-            }
-
-            return { state }
-        })
+    componentWillUnmount() {
+        ItemsStore.off('change', this.updateState)
+        ItemsStore.off('delete', this.resetState)
     }
 
-    removeItem = (itemId) => {
-        this.setState((state) => {
-            delete state.items[itemId];
-            return { state }
-        })
+    updateState = () => {
+        this.setState(()=>({items:ItemsStore.getStore()}))
     }
 
-    addItem = (value) => {
-        let id = this.itemKey++ < 100 ? '0' + this.itemKey : this.itemKey;
-        this.setState((state) => {
-            state.items[`key${id}`] = { value, packed: false }
-            return { state }
-        })
+    resetState = () => {
+        this.setState(()=>({items: null}), this.updateState)
     }
 
-    updateItem = (value, itemId) => {
-        this.setState((state) => {
-            state.items[itemId].value = value
-            return { state }
-        })
+    shouldComponentUpdate(prevProps, prevState) {
+        return prevState.items 
     }
 
     mapItems = () => {
@@ -90,11 +59,13 @@ class Application extends Component {
 
         return (
             <div className="Application">
-                <NewItem onSubmit={this.addItem} />
+                <NewItem />
                 <CountDown />
-                <Items title="Unpacked Items" items={unPackedItems} onUpdate={this.updateItem} onToggle={this.toggleItem} onRemove={this.removeItem} />
-                <Items title="Packed Items" items={packedItems} onUpdate={this.updateItem} onToggle={this.toggleItem} onRemove={this.removeItem} />
-                <button className="button full-width" onClick={this.unpackAll}>Mark All As Unpacked</button>
+                <Items title="Unpacked Items" items={unPackedItems}/>
+                <Items title="Packed Items" items={packedItems}/>
+                <button className="button full-width" onClick={unpackAll}>
+                    Mark All As Unpacked
+                </button>
             </div>
         );
     }

@@ -8,8 +8,14 @@ class Filter extends Component {
     this.props.onChange(value)
   };
 
+  shouldComponentUpdate(prevProps) {
+    return prevProps.searchTerm !== this.props.searchTerm
+  }
+
   render() {
     const { onClear, searchTerm, title } = this.props
+    // console.log('** Filter ', title);
+    
     return (
       <div className="Items-searchTerm">
         <label htmlFor={`filter${title}`}>Filter {title}</label>
